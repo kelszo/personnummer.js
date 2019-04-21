@@ -15,6 +15,7 @@ Install the module with npm: `npm install --save personnummer.js`
 ```javascript
 var personnummer = require('personnummer.js');
 
+// valid personal number formats: yymmdd-nnnn yyyymmdd-nnnn yymmddnnnn yyyymmddnnnn yymmdd+nnnn yyyymmdd+nnnn
 // valid personal number formats ex.: 040506-7356, 9912188324, 19780329-2833, 201005047640, 180604+0448
 
 personnummer.validate('970214-9890');
