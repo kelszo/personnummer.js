@@ -1,0 +1,41 @@
+{
+  "name": "personnummer.js",
+  "version": "1.0.0",
+  "description": "Javascript script to validate and parse Swedish personal identity numbers",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelszo/personnummer.js.git"
+  },
+  "keywords": [
+    "personnummer",
+    "validering",
+    "validation",
+    "swedish",
+    "parsing",
+    "parse"
+  ],
+  "author": {
+    "name": "Kelvin Szolnoky",
+    "email": "kszolnoky@pm.me",
+    "url": "http://kelszo.com"
+  },
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kelszo/personnummer.js/issues"
+  },
+  "homepage": "https://github.com/kelszo/personnummer.js/blob/master/README.md",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-security": "^1.4.0",
+    "mocha": "^6.1.4"
+  }
+}
