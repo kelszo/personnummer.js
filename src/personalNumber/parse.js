@@ -1,4 +1,4 @@
-const luhnAlgorithm = require( './luhnAlgorithm' );
+const luhnAlgorithm = require( './../luhnAlgorithm' );
 const parseDate = require( './parseDate' );
 
 module.exports = function parse( input, options ) {
@@ -19,9 +19,8 @@ module.exports = function parse( input, options ) {
   var group = reg.exec( input );
 
   // checks if input is of correct personal number format
-  if ( !group ) {
-    return { valid: false, reason: 'invalid format', input: input };
-  }
+  if ( !group ) return { valid: false, reason: 'invalid format', input: input };
+
 
   // unpacks regex groups into variables
   var centuryNum = group[ 1 ];
@@ -86,7 +85,10 @@ module.exports = function parse( input, options ) {
   var birthplace;
   if ( date < new Date( Date.UTC( 1990 ) ) ) birthplace = getBirthplace( serialNum );
 
-  return { valid: true, input: input, normalised: normalised, date: date, age: age, gender: gender, birthplace: birthplace };
+  var type = 'personnummer';
+  if ( dayNum > 60 ) type = 'samordningsnummer';
+
+  return { valid: true, type: type, input: input, normalised: normalised, date: date, age: age, gender: gender, birthplace: birthplace };
 };
 
 var values = [
@@ -120,33 +122,33 @@ var values = [
 ];
 
 var response = [
-  'stockholms län',
-  'uppsala län',
-  'södermanlands län',
-  'östergötlands län',
-  'jönköpings län',
-  'kronobergs län',
-  'kalmar län',
-  'gotlands län',
-  'blekinge län',
-  'kristianstads län',
-  'malmöhus län',
-  'hallands län',
-  'göteborgs och bohus län',
-  'älvsborgs län',
-  'skaraborgs län',
-  'värmlands län',
-  'extranummer',
-  'örebro län',
-  'västmanlands län',
-  'kopparbergs län',
-  'extranummer',
-  'gävleborgs län',
-  'västernorrlands län',
-  'jämtlands län',
-  'västerbottens län',
-  'norrbottens län',
-  'extranummer (immigrerade)'
+  'Stockholms län',
+  'Uppsala län',
+  'Södermanlands län',
+  'Östergötlands län',
+  'Jönköpings län',
+  'Kronobergs län',
+  'Kalmar län',
+  'Gotlands län',
+  'Blekinge län',
+  'Kristianstads län',
+  'Malmöhus län',
+  'Hallands län',
+  'Göteborgs och bohus län',
+  'Älvsborgs län',
+  'Skaraborgs län',
+  'Värmlands län',
+  'Extranummer',
+  'Örebro län',
+  'Västmanlands län',
+  'Kopparbergs län',
+  'Extranummer',
+  'Gävleborgs län',
+  'Västernorrlands län',
+  'Jämtlands län',
+  'Västerbottens län',
+  'Norrbottens län',
+  'Extranummer (immigrerade)'
 ];
 
 function getBirthplace( value ) {

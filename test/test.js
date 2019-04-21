@@ -2,12 +2,17 @@
 
 const assert = require( 'assert' );
 const luhnAlgorithm = require( './../src/luhnAlgorithm' );
+const parseDate = require( './../src/personalNumber/parseDate' );
+
 const personnummer = require( './../index' );
-const parseDate = require( './../src/parseDate' );
 
 const parse = personnummer.parse;
 const validate = personnummer.validate;
 const normalise = personnummer.normalise;
+
+const parseCIN = personnummer.parseCIN;
+const validateCIN = personnummer.validateCIN;
+const normaliseCIN = personnummer.normaliseCIN;
 
 describe( '#luhnAlgorithm()', function () {
   it( 'should return correct: luhn number', function () {
@@ -28,7 +33,7 @@ describe( '#parseDate()', function () {
 } );
 
 describe( '#normalise()', function () {
-  it( 'should return correct: luhn number', function () {
+  it( 'should return correct: normalised personal number', function () {
     assert.strictEqual( '194501038220', normalise( '450103-8220' ) );
     assert.strictEqual( '198707235340', normalise( 8707235340 ) );
     assert.strictEqual( '199303114202', normalise( '9303114202' ) );
@@ -112,83 +117,23 @@ describe( '#validate()', function () {
     assert.strictEqual( false, validate( 200002293243 ) );
     assert.strictEqual( false, validate( '960229-4534' ) );
   } );
-
-  it( 'should validate: edge cases and general', function () {} );
 } );
 
-describe( '#validate() = parse().valid', function () {
-  it( 'should validate: correct personnummer', function () {
-    assert.strictEqual( parse( '450103-8220' ).valid, validate( '450103-8220' ) );
-    assert.strictEqual( parse( '870613-5657' ).valid, validate( '870613-5657' ) );
-    assert.strictEqual( parse( 9307174459 ).valid, validate( 9307174459 ) );
-    assert.strictEqual( parse( '0010237808' ).valid, validate( '0010237808' ) );
-    assert.strictEqual( parse( '0512240169' ).valid, validate( '0512240169' ) );
-    assert.strictEqual( parse( '150314+5425' ).valid, validate( '150314+5425' ) );
-    assert.strictEqual( parse( '0512240169' ).valid, validate( '0512240169' ) );
-    assert.strictEqual( parse( '19181129+3057' ).valid, validate( '19181129+3057' ) );
+describe( '#validateCIN()', function () {
+  it( 'should validate correct: corporate identity number', function () {
+    assert.strictEqual( true, validateCIN( '502068-4865' ) );
+    assert.strictEqual( true, validateCIN( '556754-8283' ) );
+    assert.strictEqual( true, validateCIN( '802521-6220' ) );
+    assert.strictEqual( true, validateCIN( '802467-7182' ) );
   } );
+} );
 
-  it( 'should not validate: incorrect personnummer dates', function () {
-    assert.strictEqual( parse( '999999-5476' ).valid, validate( '999999-5476' ) );
-    assert.strictEqual( parse( '191313-8473' ).valid, validate( '191313-8473' ) );
-    assert.strictEqual( parse( 1006334351 ).valid, validate( 1006334351 ) );
-    assert.strictEqual( parse( '0014234561' ).valid, validate( '0014234561' ) );
+describe( '#normaliseCIN()', function () {
+  it( 'should normalise correct: corporate identity number', function () {
+    assert.strictEqual( '165020684865', normaliseCIN( '502068-4865' ) );
+    assert.strictEqual( '165567548283', normaliseCIN( '5567548283' ) );
+    assert.strictEqual( '168025216220', normaliseCIN( '16802521-6220' ) );
+    assert.strictEqual( '168024677182', normaliseCIN( '168024677182' ) );
+    assert.strictEqual( '198706135657', normaliseCIN( '870613-5657' ) );
   } );
-
-  it( 'should not validate: incorrect personnummer format or incorrect type', function () {
-    assert.strictEqual( parse( undefined ).valid, validate( undefined ) );
-    assert.strictEqual( parse( null ).valid, validate( null ) );
-    assert.strictEqual( parse( [] ).valid, validate( [] ) );
-    assert.strictEqual( parse( {} ).valid, validate( {} ) );
-    assert.strictEqual( parse( false ).valid, validate( false ) );
-    assert.strictEqual( parse( true ).valid, validate( true ) );
-    assert.strictEqual( parse( 123 ).valid, validate( 123 ) );
-    assert.strictEqual( parse( '123' ).valid, validate( '123' ) );
-    assert.strictEqual( parse( '123-123' ).valid, validate( '123-123' ) );
-    assert.strictEqual( parse( '123_123' ).valid, validate( '123_123' ) );
-    assert.strictEqual( parse( '123?123' ).valid, validate( '123?123' ) );
-    assert.strictEqual( parse( 'string' ).valid, validate( 'string' ) );
-    assert.strictEqual( parse( '123-abc' ).valid, validate( '123-abc' ) );
-    assert.strictEqual( parse( '670427-554' ).valid, validate( '670427-554' ) );
-    assert.strictEqual( parse( '040229-074' ).valid, validate( '040229-074' ) );
-  } );
-
-  it( 'should not validate: incorrect personnummer checksum', function () {
-    assert.strictEqual( parse( '320323-9325' ).valid, validate( '320323-9325' ) );
-    assert.strictEqual( parse( '870514-3202' ).valid, validate( '870514-3202' ) );
-    assert.strictEqual( parse( 0808083469 ).valid, validate( 0808083469 ) );
-    assert.strictEqual( parse( 1806282244 ).valid, validate( 1806282244 ) );
-    assert.strictEqual( parse( '471224-0907' ).valid, validate( '471224-0907' ) );
-  } );
-
-  it( 'should validate: co-ordination numbers', function () {
-    assert.strictEqual( parse( '0411643844' ).valid, validate( '0411643844' ) );
-    assert.strictEqual( parse( 1103784755 ).valid, validate( 1103784755 ) );
-    assert.strictEqual( parse( '0311803860' ).valid, validate( '0311803860' ) );
-    assert.strictEqual( parse( '430688-0362' ).valid, validate( '430688-0362' ) );
-  } );
-
-  it( 'should not validate: incorrect co-ordination numbers', function () {
-    assert.strictEqual( parse( '370567-4738' ).valid, validate( '370567-4738' ) );
-    assert.strictEqual( parse( '871161-2345' ).valid, validate( '871161-2345' ) );
-    assert.strictEqual( parse( 0001877584 ).valid, validate( 0001877584 ) );
-    assert.strictEqual( parse( 121272846 ).valid, validate( 121272846 ) );
-    assert.strictEqual( parse( '080690-4857' ).valid, validate( '080690-4857' ) );
-  } );
-
-  it( 'should validate: correct leapyear', function () {
-    assert.strictEqual( parse( '20000229-6127' ).valid, validate( '20000229-6127' ) );
-    assert.strictEqual( parse( 9602296973 ).valid, validate( 9602296973 ) );
-    assert.strictEqual( parse( 9202294402 ).valid, validate( 9202294402 ) );
-    assert.strictEqual( parse( '960229-6973' ).valid, validate( '960229-6973' ) );
-  } );
-
-  it( 'should not validate: incorrect leapyear', function () {
-    assert.strictEqual( parse( '20010229-2391' ).valid, validate( '20010229-2391' ) );
-    assert.strictEqual( parse( 9802293231 ).valid, validate( 9802293231 ) );
-    assert.strictEqual( parse( 200002293243 ).valid, validate( 200002293243 ) );
-    assert.strictEqual( parse( '960229-4534' ).valid, validate( '960229-4534' ) );
-  } );
-
-  it( 'should validate: edge cases and general', function () {} );
 } );

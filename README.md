@@ -4,6 +4,8 @@
 
 JavaScript script to validate and parse Swedish personal identity numbers. Fixes problems other packages fail to fix, e.g.: leap years, co-ordination numbers (samordningsnummer), parsing, and strict validation. All in one small package without dependencies. Works for Swedish personal numbers of all formats, see example below.
 
+Also works with Swedish organisations numbers.
+
 ## Installing
 
 Install the module with npm: `npm install --save personnummer.js`
@@ -43,7 +45,9 @@ personnummer.parse('19710904-5307');
 
 ## Functions
 
-### Description
+### Personal Number
+
+#### Description
 
 | Function                      | Description                                                                                                |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -51,15 +55,15 @@ personnummer.parse('19710904-5307');
 | **normalise(str)**            | Normalises the input to the following format `year month day serial`. E.g. `960417-5050` -> `199604175050` |
 | **parse(str [, options])**    | Parses the personal number and returns an object. See basic usage.                                         |
 
-### Returns
+#### Returns
 
-| Function                      | Returns                                                                                                                                                                                                                                                                                                                                          |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **validate(str [, options])** | boolean. true if valid, false if not.                                                                                                                                                                                                                                                                                                            |
-| **normalise(str)**            | string or false if input is not a recognised personal number format.                                                                                                                                                                                                                                                                             |
-| **parse(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string),`normalised` (string), `date` (Date object),`age` (number), `gender` (string: male or female), `birthplace` (string or undefined if personal number > 1990). If the personal number is invalid: resturns `valid:false` and a `reason:'example reason'` and `input`. See basic usage. |
+| Function                      | Returns                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **validate(str [, options])** | boolean. true if valid, false if not.                                                                                                                                                                                                                                                                                                                        |
+| **normalise(str)**            | string or false if input is not a recognised personal number format.                                                                                                                                                                                                                                                                                         |
+| **parse(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string),`normalised` (string), `date` (Date object),`age` (number), `gender` (string: male or female), `birthplace` (string or undefined if personal number > 1990). If the personal number is invalid: resturns `valid:false` and a `reason:'example reason'` and `input`. See basic usage or examples. |
 
-### Options
+#### Options
 
 | Option        | Input                  | Description                                                                                                                                                                                                                        |
 | ------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -68,8 +72,6 @@ personnummer.parse('19710904-5307');
 
 Recommended options are: `{strict:true, forgiving:false}`. The `forgiving` option overrides the `strict` option.
 
-Additionally the option `verbose` (true|false) can be passed to parse. It will then return a reason like the parse function.
-
 ### Examples
 
 ```javascript
@@ -77,7 +79,8 @@ var personnummer = require('personnummer.js');
 
 personnummer.parse( '980417+6320', { strict: false, forgiving: false } );
 /*
-{ valid: true,
+{
+  valid: true,
   input: '980417+6320',
   normalised: '189804176320',
   date: 1898-04-17T00:00:00.000Z,
@@ -92,7 +95,8 @@ personnummer.parse( '980417+6320', { strict: true, forgiving: false } );
 
 personnummer.parse( '980417+6320', { strict: true, forgiving: true } );
 /*
-{ valid: true,
+{
+  valid: true,
   input: '980417+6320',
   normalised: '199804176320',
   date: 1998-04-17T00:00:00.000Z,
@@ -103,7 +107,7 @@ personnummer.parse( '980417+6320', { strict: true, forgiving: true } );
 */
 ```
 
-### Invalid reasons
+#### Invalid reasons
 
 Possible reasons the `parse` function could return if personal number is invalid.
 
@@ -122,15 +126,76 @@ if `strict` option is enabled:
 | personal number is from the future | Personal numbers date is from the future.                 | 20300330-3975 |
 | age is too old                     | The age of the personal number is too old.                | 18971224+5472 |
 
-## Benchmarks
+### Corporate Identity Number (CIN)
 
-Benchmarks done in Node.js by calling the function 1,000,000 times and taking the average.
+Note that a CIN in Sweden can be a personal number. This package takes that into account, ex. parsing a valid personal number to this function will return `type:'Enskild firma'` (along with other properties).
 
-| Function        | Average time (ms) |
-| --------------- | ----------------- |
-| **validate()**  | 0.000112          |
-| **normalise()** | 0.000098          |
-| **parse()**     | 0.000121          |
+#### Description
+
+| Function                         | Description                                                                        |
+| -------------------------------- | ---------------------------------------------------------------------------------- |
+| **validateCIN(str [, options])** | Checks if the input personal number is a valid Swedish personal number.            |
+| **normaliseCIN(str)**            | Normalises the input to the following format. E.g. `168025216220` -> `802521-6220` |
+| **parseCIN(str [, options])**    | Parses the personal number and returns an object. See basic usage or examples.     |
+
+#### Returns
+
+| Function                         | Returns                                                                                                              |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **validateCIN(str [, options])** | boolean. true if valid, false if not.                                                                                |
+| **normaliseCIN(str)**            | string or false if input is not a recognised CIN format.                                                             |
+| **parseCIN(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string),`normalised` (string), `type` (string). See basic usage. |
+
+#### Invalid reasons
+
+Possible reasons the `parse` function could return if personal number is invalid.
+
+| Return                                  | Reason                                                 | ex. input        |
+| --------------------------------------- | ------------------------------------------------------ | ---------------- |
+| invalid input type                      | Input type is not string or number.                    | \[]              |
+| invalid format                          | The input CIN is of invalid format.                    | +46-498-xx-34-xx |
+| invalid group number                    | The group number (first of the 10 numbers) is 4        | 426002-7557      |
+| invalid organisations validation number | The CINs 3 and 4 number is &lt; 20                     | 961547-1286      |
+| invalid organisations number identifier | If the CIN is 12 charachters the first 2 have to be 16 | 13446265-4349    |
+| invalid checksum                        | The CIN is incorrect, checksum of CIN is incorrect.    | 556007-3492      |
+
+#### Examples
+
+```javascript
+var personnummer = require('personnummer.js');
+
+personnummer.parseCIN( '556007-3495' );
+/*
+{
+  valid: true,
+  type: 'Aktiebolag',
+  input: '556007-3495',
+  normalised: '165560073495'
+}
+*/
+
+personnummer.parseCIN( '19870923-7393' );
+/*
+{
+  valid: true,
+  type: 'Enskild firma',
+  input: '19870923-7393',
+  normalised: '198709237393',
+  date: 1987-09-23T00:00:00.000Z,
+  age: 31,
+  gender: 'male',
+  birthplace: 'Kopparbergs län'
+}
+*/
+
+personnummer.parseCIN( '556339-2279' );
+
+/*
+{ valid: false,
+  reason: 'invalid checksum',
+  input: '556238-2279' }
+*/
+```
 
 ## Testing
 
