@@ -122,6 +122,16 @@ if `strict` option is enabled:
 | personal number is from the future | Personal numbers date is from the future.                 | 20300330-3975 |
 | age is too old                     | The age of the personal number is too old.                | 18971224+5472 |
 
+## Benchmarks
+
+Benchmarks done in Node.js by calling the function 1,000,000 times and taking the average.
+
+| Function        | Average time (ms) |
+| --------------- | ----------------- |
+| **validate()**  | 0.000112          |
+| **normalise()** | 0.000098          |
+| **parse()**     | 0.000121          |
+
 ## Testing
 
 Run `npm test` (make sure you have all devDependencies installed)
