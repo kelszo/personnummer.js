@@ -1,7 +1,7 @@
 {
   "name": "personnummer.js",
   "version": "1.0.0",
-  "description": "Javascript script to validate and parse Swedish personal identity numbers",
+  "description": "JavaScript script to validate and parse Swedish personal identity numbers",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -15,11 +15,18 @@
   },
   "keywords": [
     "personnummer",
+    "validate",
     "validering",
     "validation",
     "swedish",
     "parsing",
-    "parse"
+    "parse",
+    "personal",
+    "number",
+    "identity",
+    "social",
+    "security",
+    "national"
   ],
   "author": {
     "name": "Kelvin Szolnoky",

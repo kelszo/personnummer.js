@@ -68,7 +68,7 @@ module.exports = function validate( input, options ) {
     }
 
     // validates strict
-    if ( !( centuryNum && options.forgiving ) && sep && ( ( age >= 100 && sep === '-' ) || ( age < 100 && sep === '+' ) ) ) return { valid: false, reason: 'century and separator contradict', input: input };
+    if ( !( centuryNum && options.forgiving ) && sep && ( ( age >= 100 && sep === '-' ) || ( age < 100 && sep === '+' ) ) ) return { valid: false, reason: 'age and separator contradict', input: input };
     if ( date > new Date() ) return { valid: false, reason: 'personal number is from the future', input: input };
     if ( age > 120 ) return { valid: false, reason: 'age is too old', input: input };
   }
