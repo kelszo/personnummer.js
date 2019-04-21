@@ -208,9 +208,11 @@ personnummer.parseCIN( '19870923-7393' );
 personnummer.parseCIN( '556339-2279' );
 
 /*
-{ valid: false,
+{
+  valid: false,
   reason: 'invalid checksum',
-  input: '556238-2279' }
+  input: '556238-2279'
+}
 */
 ```
 
