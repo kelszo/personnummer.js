@@ -33,12 +33,13 @@ personnummer.parse('19710904-5307');
 /*
 {
   valid: true,
+  type: 'personnummer',
   input: '19710904-5307',
   normalised: '197109045307',
-  date: 1971-09-04T00:00:00.000Z, // Date object
+  date: 1971-09-04T00:00:00.000Z,
   age: 47,
   gender: 'female',
-  birthplace: 'göteborgs och bohus län' // only defined if personal number < 1990
+  birthplace: 'Göteborgs och bohus län'
 }
 */
 ```
@@ -49,11 +50,11 @@ personnummer.parse('19710904-5307');
 
 #### Description
 
-| Function                      | Description                                                                                                |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **validate(str [, options])** | Checks if the input personal number is a valid Swedish personal number.                                    |
-| **normalise(str)**            | Normalises the input to the following format `year month day serial`. E.g. `960417-5050` -> `199604175050` |
-| **parse(str [, options])**    | Parses the personal number and returns an object. See basic usage.                                         |
+| Function                      | Description                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- |
+| **validate(str [, options])** | Checks if the input personal number is a valid Swedish personal number.                           |
+| **normalise(str)**            | Normalises the input to the following format `yyyymmddnnnn`. E.g. `960417-5050` -> `199604175050` |
+| **parse(str [, options])**    | Parses the personal number and returns an object. See basic usage.                                |
 
 #### Returns
 
@@ -81,12 +82,13 @@ personnummer.parse( '980417+6320', { strict: false, forgiving: false } );
 /*
 {
   valid: true,
+  type: 'personnummer',
   input: '980417+6320',
   normalised: '189804176320',
   date: 1898-04-17T00:00:00.000Z,
   age: 121,
   gender: 'female',
-  birthplace: 'värmlands län'
+  birthplace: 'Värmlands län'
 }
 */
 
@@ -97,10 +99,25 @@ personnummer.parse( '980417+6320', { strict: true, forgiving: true } );
 /*
 {
   valid: true,
+  type: 'personnummer',
   input: '980417+6320',
   normalised: '199804176320',
   date: 1998-04-17T00:00:00.000Z,
   age: 21,
+  gender: 'female',
+  birthplace: undefined
+}
+*/
+
+personnummer.parse( '0411643844' );
+/*
+{
+  valid: true,
+  type: 'samordningsnummer',
+  input: '0411643844',
+  normalised: '200411643844',
+  date: 2004-11-04T00:00:00.000Z,
+  age: 14,
   gender: 'female',
   birthplace: undefined
 }
