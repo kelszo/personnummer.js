@@ -42,6 +42,16 @@ personnummer.parse('19710904-5307');
   birthplace: 'Göteborgs och bohus län'
 }
 */
+
+personnummer.parseCIN( '556007-3495' );
+/*
+{
+  valid: true,
+  type: 'Aktiebolag',
+  input: '556007-3495',
+  normalised: '165560073495'
+}
+*/
 ```
 
 ## Functions
