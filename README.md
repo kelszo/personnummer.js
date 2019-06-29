@@ -163,7 +163,7 @@ Note that a CIN in Sweden can be a personal number. This package takes that into
 | Function                         | Description                                                                        |
 | -------------------------------- | ---------------------------------------------------------------------------------- |
 | **validateCIN(str [, options])** | Checks if the input personal number is a valid Swedish personal number.            |
-| **normaliseCIN(str)**            | Normalises the input to the following format. E.g. `168025216220` -> `802521-6220` |
+| **normaliseCIN(str)**            | Normalises the input to the following format. E.g. `802521-6220` -> `168025216220` |
 | **parseCIN(str [, options])**    | Parses the personal number and returns an object. See basic usage or examples.     |
 
 #### Returns
