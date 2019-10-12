@@ -153,7 +153,7 @@ var response = [
 
 function getBirthplace( value ) {
   var r;
-  values.forEach( ( v, i ) => {
+  values.forEach( function ( v, i ) {
     if ( v[ 0 ] <= value && value <= v[ 1 ] ) r = response[ i ];
   } );
   return r;
