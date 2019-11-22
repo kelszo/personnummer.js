@@ -3,6 +3,7 @@
   "version": "1.1.6",
   "description": "JavaScript script to validate and parse Swedish personal identity numbers",
   "main": "index.js",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "directories": {
     "test": "test"
   },
