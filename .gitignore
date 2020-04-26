@@ -6,3 +6,5 @@ dontpush
 
 # lib folder
 lib
+
+*.tgz

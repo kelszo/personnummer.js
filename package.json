@@ -1,14 +1,15 @@
 {
     "name": "personnummer.js",
     "version": "1.1.6",
-    "description": "JavaScript script to validate and parse Swedish personal identity numbers and corporate identity numbers. Written in TypeScript and includes TypeScript types.",
+    "description": "JavaScript script to validate and parse Swedish personal identity numbers and corporate identity numbers. Written in TypeScript and includes types.",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/"
     },
     "directories": {
-        "test": "test"
+        "test": "test",
+        "lib": "lib"
     },
     "scripts": {
         "lint": "node_modules/typescript/bin/tsc --noEmit && node_modules/eslint/bin/eslint.js 'src/*/**/*.ts' --fix && echo '✔️ nice'",
@@ -52,17 +53,17 @@
     },
     "homepage": "https://github.com/kelszo/personnummer.js/blob/master/README.md",
     "devDependencies": {
-        "@babel/cli": "^7.6.4",
-        "@babel/core": "^7.6.4",
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
         "@types/mocha": "^7.0.2",
-        "@typescript-eslint/eslint-plugin": "^2.25.0",
-        "@typescript-eslint/parser": "^2.25.0",
+        "@typescript-eslint/eslint-plugin": "^2.29.0",
+        "@typescript-eslint/parser": "^2.29.0",
         "eslint": "^6.8.0",
-        "eslint-config-prettier": "^6.10.1",
-        "eslint-plugin-node": "^11.0.0",
-        "eslint-plugin-prettier": "^3.1.2",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^3.1.3",
         "eslint-plugin-security": "^1.4.0",
-        "mocha": "^6.1.4",
+        "mocha": "^7.1.2",
         "prettier": "^2.0.5",
         "ts-node": "^8.9.1",
         "tslint-eslint-rules": "^5.4.0",
