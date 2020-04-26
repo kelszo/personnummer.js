@@ -1,52 +1,47 @@
 {
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true
-  },
-  "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:security/recommended"],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+        "node": true
     },
-    "ecmaVersion": 2018
-  },
-  "plugins": [
-    "security"
-  ],
-  "rules": {
-    "no-console": ["error", {
-      "allow": ["warn", "error"]
-    }],
-    "node/exports-style": ["error", "module.exports"],
-    "node/prefer-global/buffer": ["error", "always"],
-    "node/prefer-global/console": ["error", "always"],
-    "node/prefer-global/process": ["error", "always"],
-    "node/prefer-global/url-search-params": ["error", "always"],
-    "node/prefer-global/url": ["error", "always"],
-    "node/no-missing-require": ["error", {
-      "resolvePaths": ["./"],
-      "tryExtensions": [".js", ".json", ".node"]
-    }],
-    "indent": [
-      "off",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
+    "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:security/recommended", "prettier"],
+    "plugins": ["node", "prettier"],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "block-scoped-var": "error",
+        "eqeqeq": "error",
+        "no-warning-comments": "warn",
+        "no-var": "error",
+        "prefer-const": "error",
+        "eol-last": "error"
+    },
+    "overrides": [
+        {
+            "files": "**/*.ts",
+            "parser": "@typescript-eslint/parser",
+            "extends": ["plugin:@typescript-eslint/recommended", "plugin:@typescript-eslint/eslint-recommended"],
+            "rules": {
+                "@typescript-eslint/no-floating-promises": "error",
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/no-non-null-assertion": "off",
+                "@typescript-eslint/no-use-before-define": "off",
+                "@typescript-eslint/camelcase": "off",
+                "node/no-missing-import": "off",
+                "node/no-unsupported-features/es-syntax": "off",
+                "node/no-missing-require": "off",
+                "node/shebang": "off",
+                "no-dupe-class-members": "off",
+                "security/detect-object-injection": "off",
+                "security/detect-non-literal-fs-filename": "off",
+                "curly": "error"
+            },
+            "parserOptions": {
+                "ecmaVersion": 2018,
+                "sourceType": "module",
+                "project": "./tsconfig.json"
+            }
+        }
     ]
-  }
 }

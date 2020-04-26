@@ -5,6 +5,7 @@ I am really happy that you are willing contribute to my project.
 
 ## Submitting Changes
 
+0. Fork the repo on Github.
 1. Create a new feature branch and switch to it: `git checkout -b myfeature`
 2. Write code!
 3. **Test** your code!
@@ -17,7 +18,7 @@ I am really happy that you are willing contribute to my project.
 ## Coding Conventions
 Start reading our code and you'll get the hang of it. We optimize for readability. Some basics:
 
-0. **USE ESLINT**
+0. **USE ESLINT AND PRETTIER**
 1. Indent using two spaces (soft tabs)
 2. Use semicolons (`;`)
 3. Inlines braces:
