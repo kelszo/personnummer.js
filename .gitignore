@@ -1,5 +1,10 @@
 # dependencies
-/node_modules
+node_modules
 
 # dontpush folder
 dontpush
+
+# lib folder
+lib
+
+*.tgz
