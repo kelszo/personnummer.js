@@ -4,9 +4,6 @@
     "description": "JavaScript script to validate and parse Swedish personal identity numbers and corporate identity numbers. Written in TypeScript and includes types.",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
-    },
     "directories": {
         "test": "test",
         "lib": "lib"
