@@ -1,6 +1,6 @@
 {
     "name": "personnummer.js",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "JavaScript script to validate and parse Swedish personal identity numbers and corporate identity numbers. Written in TypeScript and includes types.",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -12,7 +12,7 @@
         "lint": "node_modules/typescript/bin/tsc --noEmit && node_modules/eslint/bin/eslint.js 'src/*/**/*.ts' --fix && echo '✔️ nice'",
         "prebuild": "npm run lint -s",
         "build": "node_modules/typescript/bin/tsc",
-        "test": "mocha -r node_modules/ts-node/register/ test/**/*.test.ts",
+        "test": "./node_modules/mocha/bin/mocha -r node_modules/ts-node/register/ test/**/*.test.ts",
         "babel-build": "babel lib -d dontpush",
         "prepare": "npm run test && npm run build"
     },

@@ -86,4 +86,5 @@ function normaliseCIN(input: string | number): string {
     return "";
 }
 
+export default { parse, validate, normalise, parseCIN, validateCIN, normaliseCIN };
 export { parse, validate, normalise, parseCIN, validateCIN, normaliseCIN };
