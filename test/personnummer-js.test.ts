@@ -32,6 +32,8 @@ describe("#normalisePN()", function () {
         assert.strictEqual(normalisePN("9303114202"),"199303114202");
         assert.strictEqual(normalisePN("19181129+3057"),"191811293057");
         assert.strictEqual(normalisePN("0001018126"), "200001018126");
+        assert.strictEqual(normalisePN("000101-8126"), "200001018126");
+        assert.strictEqual(normalisePN("000101+8126"), "190001018126");
         assert.strictEqual(normalisePN("071029-0024"),"200710290024");
         assert.strictEqual(normalisePN("030405-9231"),"200304059231");
     });
