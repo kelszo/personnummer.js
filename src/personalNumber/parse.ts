@@ -91,7 +91,7 @@ function parse(input: string | number, options: PersonalNumberOptions): Personal
 
     // normalises the personal number to the format year|month|day|serial|gender|checksum
     // e.g. 970214-5641 will become 199702145641
-    const normalised = "" + date.getFullYear() + monthNum + dayNum + serialNum + genderNum + checkNum;
+    const normalised = "" + date.getUTCFullYear() + monthNum + dayNum + serialNum + genderNum + checkNum;
 
     // parses the gender according the personal number definition, if the second last number is even it is a female, otherwise a male
     let gender: GenderType = "MALE";

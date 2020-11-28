@@ -27,7 +27,7 @@ function parseDate(year: number, month: number, date: number, sep: string, centu
     const validDate = new Date(Date.UTC(currentCentury + year, month, date));
 
     // checks if it is the same date as the input date
-    if (parseInt(validDate.getFullYear().toString().slice(2, 4)) === year && validDate.getMonth() === month && validDate.getDate() === date) {
+    if (parseInt(validDate.getUTCFullYear().toString().slice(2, 4)) === year && validDate.getUTCMonth() === month && validDate.getUTCDate() === date) {
         return { valid: true, date: validDate };
     }
 
