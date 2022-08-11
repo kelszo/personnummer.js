@@ -1,64 +1,101 @@
-import { parse as parsePN } from "./personalNumber";
 import { parse as parseCINumer } from "./corporateIdentityNumber";
-import { PersonalNumberOptions, CorporateIdentityNumberReturn, PersonalNumberReturn } from "./types";
+import { parse as parsePN } from "./personalNumber";
+import { CorporateIdentityNumberReturn, CorporateIdentityOptions, PersonalNumberOptions, PersonalNumberReturn, PersonalNumberType } from "./types";
 
-function parse(input: string | number, options?: PersonalNumberOptions): PersonalNumberReturn {
+export function parse(input: string | number, options?: PersonalNumberOptions): PersonalNumberReturn {
     if (!options) {
         options = {};
+    }
+
+    if (options.forgiving === undefined) {
+        options.forgiving = true;
+    }
+
+    if (options.strict === undefined) {
+        options.strict = true;
+    }
+
+    if (options.normaliseFormat === undefined) {
+        options.normaliseFormat = "YYYYMMDDNNNN";
     }
 
     return parsePN(input, options);
 }
 
-function validate(input: string | number, options?: PersonalNumberOptions): boolean {
+export function validate(input: string | number, options?: Omit<PersonalNumberOptions, "normaliseFormat">): boolean {
     if (!options) {
         options = {};
+    }
+
+    if (options.forgiving === undefined) {
+        options.forgiving = true;
+    }
+
+    if (options.strict === undefined) {
+        options.strict = true;
     }
 
     return parse(input, options).valid;
 }
 
-function normalise(input: string | number, options?: PersonalNumberOptions): string {
+export function normalise(input: string | number, options?: PersonalNumberOptions): string | undefined {
     if (!options) {
         options = {};
+    }
+
+    if (options.forgiving === undefined) {
+        options.forgiving = true;
+    }
+
+    if (options.strict === undefined) {
+        options.strict = true;
+    }
+
+    if (options.normaliseFormat === undefined) {
+        options.normaliseFormat = "YYYYMMDDNNNN";
     }
 
     const pn = parse(input, options);
 
     if (pn.valid) {
         return pn.normalised as string;
-    } else {
-        return "";
     }
+
+    return undefined;
 }
 
-function parseCIN(input: string | number): CorporateIdentityNumberReturn | PersonalNumberReturn {
-    const cin = parseCINumer(input);
+export function parseCIN(input: string | number, options?: CorporateIdentityOptions): CorporateIdentityNumberReturn | PersonalNumberReturn {
+    if (!options) {
+        options = {};
+    }
+
+    const cin = parseCINumer(input, options);
     let pn;
 
     if (cin.valid) {
         return cin;
     } else {
-        pn = parse(input, { strict: true });
+        const pnFormat = options.shortNormalisation ? "YYMMDD-NNNN" : "YYYYMMDDNNNN";
+        pn = parse(input, { forgiving: true, strict: true, normaliseFormat: pnFormat });
     }
 
     if (pn.valid) {
-        pn.type = "Enskild firma";
+        pn.type = PersonalNumberType.IndividualCompany; // Enskild firma
         return pn;
     }
 
     return cin;
 }
 
-function validateCIN(input: string | number): boolean {
-    const cin = parseCINumer(input);
+export function validateCIN(input: string | number): boolean {
+    const cin = parseCINumer(input, {});
 
     let pn;
 
     if (cin.valid) {
         return true;
     } else {
-        pn = parse(input, { strict: true });
+        pn = parse(input, { forgiving: true, strict: true });
     }
 
     if (pn.valid) {
@@ -68,23 +105,28 @@ function validateCIN(input: string | number): boolean {
     return false;
 }
 
-function normaliseCIN(input: string | number): string {
-    const cin = parseCINumer(input);
+export function normaliseCIN(input: string | number, options?: CorporateIdentityOptions): string | undefined {
+    if (!options) {
+        options = {};
+    }
+
+    const cin = parseCINumer(input, options);
 
     let pn;
 
     if (cin.valid) {
         return cin.normalised as string;
     } else {
-        pn = parse(input, { strict: true });
+        const pnFormat = options.shortNormalisation ? "YYMMDD-NNNN" : "YYYYMMDDNNNN";
+        pn = parse(input, { forgiving: true, strict: true, normaliseFormat: pnFormat });
     }
 
     if (pn.valid) {
         return pn.normalised as string;
     }
 
-    return "";
+    return undefined;
 }
 
 export default { parse, validate, normalise, parseCIN, validateCIN, normaliseCIN };
-export { parse, validate, normalise, parseCIN, validateCIN, normaliseCIN };
+export * from "./types";

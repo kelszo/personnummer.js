@@ -1,12 +1,11 @@
 import { luhnAlgorithm } from "../luhnAlgorithm";
+import { BirthPlace, Gender, PersonalNumberErrors, PersonalNumberOptions, PersonalNumberReturn, PersonalNumberType } from "../types";
 import { parseDate } from "./parseDate";
-
-import { PersonalNumberOptions, PersonalNumberReturn, BirthPlace, PersonalNumberType, GenderType } from "../types";
 
 function parse(input: string | number, options: PersonalNumberOptions): PersonalNumberReturn {
     // checks that the input is of correct type
     if (typeof input !== "number" && typeof input !== "string") {
-        return { valid: false, reason: "INPUT_TYPE", input: input };
+        return { valid: false, reason: PersonalNumberErrors.InputType, input: input };
     }
 
     // coerce input to string
@@ -24,7 +23,7 @@ function parse(input: string | number, options: PersonalNumberOptions): Personal
 
     // checks if input is of correct personal number format
     if (!group) {
-        return { valid: false, reason: "FORMAT", input: input };
+        return { valid: false, reason: PersonalNumberErrors.Format, input: input };
     }
 
     // unpacks regex groups into letiables
@@ -40,63 +39,64 @@ function parse(input: string | number, options: PersonalNumberOptions): Personal
     // parses and checks date
     const parsedDate = parseDate(+yearNum, +monthNum, +dayNum, sep, +centuryNum);
     if (!parsedDate.valid) {
-        return { valid: false, reason: "INCORRECT_DATE", input: input };
+        return { valid: false, reason: PersonalNumberErrors.IncorrectDate, input: input };
     }
-    let date = parsedDate.date as Date;
+    const date = parsedDate.date as Date;
 
     // validates control number using luhns algorithm
     if (luhnAlgorithm("" + yearNum + monthNum + dayNum + serialNum + genderNum) !== +checkNum) {
-        return { valid: false, reason: "CHECKSUM", input: input };
+        return { valid: false, reason: PersonalNumberErrors.Checksum, input: input };
     }
 
     // calculates age
-    let age = ~~((Date.now() - +date) / 31557600000);
+    const age = ~~((Date.now() - +date) / 31557600000);
+
+    if (!sep) {
+        if (age >= 100) {
+            sep = "+";
+        } else {
+            sep = "-";
+        }
+    }
 
     // if validation is forgiving, i.e. if the user possibly incorrectly used a '+' separator instead of a '-' separator
-    // this will in most cases produce an age over 120
-    if (options && options.forgiving) {
+    if (options.forgiving) {
         if (age < 100 && sep === "+") {
             sep = "-";
         } else if (age >= 100 && sep === "-") {
             sep = "+";
-        }
-
-        if (!centuryNum && age > 120) {
-            age -= 100;
-            sep = "-";
-            date = new Date(Date.UTC(date.getFullYear() + 100, date.getMonth(), date.getDate()));
-        } else if (centuryNum && age < 0) {
-            age += 100;
-            sep = "-";
-            date = new Date(Date.UTC(date.getFullYear() - 100, date.getMonth(), date.getDate()));
         }
     }
 
     // if validation is strict, i.e. separator must match the age (this may occur if the user uses a incorrectly separator in addition to specifying the century)
     // the personal number can not be from the future
     // the age can not be greater than 120
-    if (options && options.strict) {
+    if (options.strict) {
         if (!(centuryNum && options.forgiving) && sep && ((age >= 100 && sep === "-") || (age < 100 && sep === "+"))) {
-            return { valid: false, reason: "AGE_SEPARATOR_CONTRADICTION", input: input };
+            return { valid: false, reason: PersonalNumberErrors.AgeSeparatorContradiction, input: input };
         }
 
         if (date > new Date()) {
-            return { valid: false, reason: "BACK_TO_THE_FUTURE", input: input };
-        }
-
-        if (age > 120) {
-            return { valid: false, reason: "AGE_IS_TOO_OLD", input: input };
+            return { valid: false, reason: PersonalNumberErrors.BackToTheFuture, input: input };
         }
     }
 
-    // normalises the personal number to the format year|month|day|serial|gender|checksum
+    // normalises the personal number
+    // Default format: year|month|day|serial|gender|checksum
     // e.g. 970214-5641 will become 199702145641
-    const normalised = "" + date.getUTCFullYear() + monthNum + dayNum + serialNum + genderNum + checkNum;
+    let normalised = options.normaliseFormat!;
+    normalised = normalised.replace("YYYY", date.getUTCFullYear().toString());
+    normalised = normalised.replace("YY", date.getUTCFullYear().toString().substring(2));
+    normalised = normalised.replace("MM", monthNum);
+    normalised = normalised.replace("DD", dayNum);
+    normalised = normalised.replace("-", sep);
+    normalised = normalised.replace("+", sep);
+    normalised = normalised.replace("NNNN", serialNum + genderNum + checkNum);
 
     // parses the gender according the personal number definition, if the second last number is even it is a female, otherwise a male
-    let gender: GenderType = "MALE";
+    let gender = Gender.Male;
     if (+genderNum % 2 === 0) {
-        gender = "FEMALE";
+        gender = Gender.Female;
     }
 
     // personal numbers before 1990 specify birthplace using the two first serial numbers.
@@ -106,9 +106,9 @@ function parse(input: string | number, options: PersonalNumberOptions): Personal
         birthplace = getBirthplace(+serialNum);
     }
 
-    let type: PersonalNumberType = "PERSONNUMMER";
+    let type = PersonalNumberType.PersonalNumber;
     if (+dayNum > 60) {
-        type = "SAMORDNINGSNUMMER";
+        type = PersonalNumberType.CoordinationNumber;
     }
 
     return { valid: true, type: type, input: input, normalised: normalised, date: date, age: age, gender: gender, birthplace: birthplace };

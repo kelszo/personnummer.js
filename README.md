@@ -1,8 +1,10 @@
 # personnummer.js
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![npm version](https://img.shields.io/npm/v/personnummer.js.svg?style=popout-square) ![Github issues](https://img.shields.io/github/issues/kelszo/personnummer.js.svg?style=popout-square)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/personnummer.js.svg?style=popout-square)](https://www.npmjs.com/package/personnummer.js)
+![Github issues](https://img.shields.io/github/issues/kelszo/personnummer.js.svg?style=popout-square)
 
-JavaScript script (written in TypeScript) to validate and parse Swedish personal identity numbers. Fixes problems other packages fail to fix, e.g.: leap years, co-ordination numbers (samordningsnummer), parsing, and strict validation. All in one small package without dependencies. Works for Swedish personal numbers of all formats, see example below.
+JavaScript script (written in TypeScript) to validate and parse Swedish personal identity numbers. Fixes problems other packages fail to fix, e.g.: leap years, co-ordination numbers (samordningsnummer), parsing, and strict validation; while being backed by tests. **All in one small package without dependencies. Works for Swedish personal numbers of all formats, see examples below.**
 
 Also works with Swedish organisations numbers.
 
@@ -44,6 +46,20 @@ personnummer.parse("19710904-5307");
 }
 */
 
+personnummer.parse("0411643844", { normaliseFormat: "YYMMDD-NNNN" });
+/*
+{
+  valid: true,
+  type: 'SAMORDNINGSNUMMER',
+  input: '0411643844',
+  normalised: '041164-3844',
+  date: 2004-11-04T00:00:00.000Z,
+  age: 17,
+  gender: 'FEMALE',
+  birthplace: undefined
+}
+*/
+
 personnummer.parseCIN("556007-3495");
 /*
 {
@@ -61,76 +77,53 @@ personnummer.parseCIN("556007-3495");
 
 #### Description
 
-| Function                      | Description                                                                                       |
-| ----------------------------- | ------------------------------------------------------------------------------------------------- |
-| **validate(str [, options])** | Checks if the input personal number is a valid Swedish personal number.                           |
-| **normalise(str)**            | Normalises the input to the following format `yyyymmddnnnn`. E.g. `960417-5050` -> `199604175050` |
-| **parse(str [, options])**    | Parses the personal number and returns an object. See basic usage.                                |
+| Function                       | Description                                                                                                               |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| **validate(str [, options])**  | Checks if the input personal number is a valid Swedish personal number.                                                   |
+| **normalise(str [, options])** | Normalises the input. Default format: `yyyymmddnnnn`. E.g. `960417-5050` -> `199604175050`. See `options.normaliseFormat` |
+| **parse(str [, options])**     | Parses the personal number and returns an object. See basic usage.                                                        |
 
 #### Returns
 
-| Function                      | Returns                                                                                                                                                                                                                                                                                                                                                       |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **validate(str [, options])** | boolean. true if valid, false if not.                                                                                                                                                                                                                                                                                                                         |
-| **normalise(str)**            | string, can be empty if personal number is not valid.                                                                                                                                                                                                                                                                                                         |
-| **parse(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string),`normalised` (string), `date` (Date object), `age` (number), `gender` (string: male or female), `birthplace` (string or undefined if personal number > 1990). If the personal number is invalid: resturns `valid:false` and a `reason:'example reason'` and `input`. See basic usage or examples. |
+| Function                      | Returns                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **validate(str [, options])** | boolean. true if valid, false if not.                                                                                                                                                                                                                                                                                                                          |
+| **normalise(str [,options])** | string, can be empty if personal number is not valid.                                                                                                                                                                                                                                                                                                          |
+| **parse(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string), `normalised` (string), `date` (Date object), `age` (number), `gender` (string: male or female), `birthplace` (string or undefined if personal number > 1990). If the personal number is invalid: resturns `valid:false` and a `reason:'example reason'` and `input`. See basic usage or examples. |
 
 #### Options
 
-| Option        | Input                  | Description                                                                                                                                                                                                                        |
-| ------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **strict**    | boolean: default false | Sets strict validation, i.e. personal number can not be from the future, can not be older than 120 years, and separator must match age (- for age &lt; 100 + for ages >= 100)                                                      |
-| **forgiving** | boolean: default false | If the user possibly incorrectly used a '+' separator instead of a '-' separator and produces an age >= 120 forgive them and correct their mistake. Also if the personal number is from the future set it to the previous century. |
-
-Recommended options are: `{strict:true, forgiving:false}`. The `forgiving` option overrides the `strict` option.
+| Option              | Input                           | Description                                                                                                                                       |
+| ------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **strict**          | `boolean (default true)`        | Sets strict validation, i.e. personal number can not be from the future and separator must match age (`-` for age &lt; 100 `+` for ages >= 100)   |
+| **forgiving**       | `boolean (default true)`        | If the user possibly incorrectly used a '+' separator instead of a '-' separator forgive them and correct their mistake.                          |
+| **normaliseFormat** | `string (default YYYYMMDDNNNN)` | Normalise the personal number to that format. Allowed format tokens: `YYYY`, `YY`, `MM`, `DD`, `-` or `+` (separator), `NNNN`. E.g. `YYMMDD-NNNN` |
 
 ### Examples
 
 ```javascript
 var personnummer = require("personnummer.js");
 
-personnummer.parse("980417+6320", { strict: false, forgiving: false });
+personnummer.parse("19980417+6320", { normaliseFormat: "YYYYMMDD-NNNN" });
 /*
 {
   valid: true,
   type: 'PERSONNUMMER',
-  input: '980417+6320',
-  normalised: '189804176320',
-  date: 1898-04-17T00:00:00.000Z,
-  age: 121,
-  gender: 'FEMALE',
-  birthplace: 'Värmlands län'
-}
-*/
-
-personnummer.parse("980417+6320", { strict: true, forgiving: false });
-// { valid: false, reason: 'age is too old', input: '980417+6320' }
-
-personnummer.parse("980417+6320", { strict: true, forgiving: true });
-/*
-{
-  valid: true,
-  type: 'PERSONNUMMER',
-  input: '980417+6320',
-  normalised: '199804176320',
+  input: '19980417+6320',
+  normalised: '19980417-6320',
   date: 1998-04-17T00:00:00.000Z,
-  age: 21,
+  age: 24,
   gender: 'FEMALE',
   birthplace: undefined
 }
 */
 
-personnummer.parse("0411643844");
+personnummer.parse("19980417+6320", { normaliseFormat: "YYYYMMDD-NNNN", forgiving: false });
 /*
 {
-  valid: true,
-  type: 'SAMORDNINGSNUMMER',
-  input: '0411643844',
-  normalised: '200411643844',
-  date: 2004-11-04T00:00:00.000Z,
-  age: 14,
-  gender: 'FEMALE',
-  birthplace: undefined
+  valid: false,
+  reason: 'AGE_SEPARATOR_CONTRADICTION',
+  input: '19980417+6320'
 }
 */
 ```
@@ -171,8 +164,14 @@ Note that a CIN in Sweden can be a personal number. This package takes that into
 | Function                         | Returns                                                                                                               |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | **validateCIN(str [, options])** | boolean. true if valid, false if not.                                                                                 |
-| **normaliseCIN(str)**            | string, is empty if corporate identity number is not valid                                                            |
+| **normaliseCIN(str [,options])** | string, is undefined if corporate identity number is not valid                                                        |
 | **parseCIN(str [, options])**    | Returns an object with: `valid` (boolean), `input` (string), `normalised` (string), `type` (string). See basic usage. |
+
+#### Options
+
+| Option                 | Input                     | Description                                                                       |
+| ---------------------- | ------------------------- | --------------------------------------------------------------------------------- |
+| **shortNormalisation** | `boolean (default false)` | If true normalise organisation number to `NNNNNN-NNNN` format. I.e. `556007-3495` |
 
 #### Invalid reasons
 
@@ -202,6 +201,16 @@ personnummer.parseCIN("556007-3495");
 }
 */
 
+pn.parseCIN("969667-6312", { shortNormalisation: true });
+/*
+{
+  valid: true,
+  type: 'Handelsbolag, kommanditbolag och enkla bolag',
+  input: '969667-6312',
+  normalised: '969667-6312'
+}
+*/
+
 personnummer.parseCIN("19870923-7393");
 /*
 {
@@ -217,7 +226,6 @@ personnummer.parseCIN("19870923-7393");
 */
 
 personnummer.parseCIN("556339-2279");
-
 /*
 {
   valid: false,
@@ -229,7 +237,7 @@ personnummer.parseCIN("556339-2279");
 
 ## Testing
 
-Run `npm test` (make sure you have all devDependencies installed)
+Run `yarn test` (make sure you have all devDependencies installed)
 
 ## Contributing
 

@@ -29,13 +29,18 @@ describe("#normalisePN()", function () {
     it("should return correct: normalised personal number", function () {
         assert.strictEqual(normalisePN("450103-8220"), "194501038220");
         assert.strictEqual(normalisePN(8707235340), "198707235340");
-        assert.strictEqual(normalisePN("9303114202"),"199303114202");
-        assert.strictEqual(normalisePN("19181129+3057"),"191811293057");
+        assert.strictEqual(normalisePN("9303114202"), "199303114202");
+        assert.strictEqual(normalisePN("19181129+3057"), "191811293057");
         assert.strictEqual(normalisePN("0001018126"), "200001018126");
         assert.strictEqual(normalisePN("000101-8126"), "200001018126");
         assert.strictEqual(normalisePN("000101+8126"), "190001018126");
-        assert.strictEqual(normalisePN("071029-0024"),"200710290024");
-        assert.strictEqual(normalisePN("030405-9231"),"200304059231");
+        assert.strictEqual(normalisePN("071029-0024"), "200710290024");
+        assert.strictEqual(normalisePN("030405-9231"), "200304059231");
+        assert.strictEqual(normalisePN("581018-6246", { normaliseFormat: "YYMMDD-NNNN" }), "581018-6246");
+        assert.strictEqual(normalisePN("19631124-2512", { normaliseFormat: "YYMMDD-NNNN" }), "631124-2512");
+        assert.strictEqual(normalisePN("800714-1461", { normaliseFormat: "YYMMDDNNNN" }), "8007141461");
+        assert.strictEqual(normalisePN("671218-4842", { normaliseFormat: "YYYYMMDD-NNNN" }), "19671218-4842");
+        assert.strictEqual(normalisePN("8011198275", { normaliseFormat: "YYMMDD-NNNN" }), "801119-8275");
     });
 });
 
@@ -50,7 +55,6 @@ describe("#validatePN()", function () {
         assert.strictEqual(validatePN("0512240169"), true);
         assert.strictEqual(validatePN("19181129+3057"), true);
     });
-
 
     it("should not validate: incorrect personnummer dates", function () {
         assert.strictEqual(validatePN("999999-5476"), false);
@@ -78,8 +82,8 @@ describe("#validatePN()", function () {
     });
 
     it("should not validate: incorrect personnummer checksum", function () {
-        assert.strictEqual(validatePN("320323-9325"),false);
-        assert.strictEqual(validatePN("870514-3202"),false);
+        assert.strictEqual(validatePN("320323-9325"), false);
+        assert.strictEqual(validatePN("870514-3202"), false);
         assert.strictEqual(validatePN(1806282244), false);
         assert.strictEqual(validatePN("471224-0907"), false);
     });
@@ -124,10 +128,14 @@ describe("#validateCIN()", function () {
 
 describe("#normaliseCIN()", function () {
     it("should normalise correct: corporate identity number", function () {
-        assert.strictEqual(normaliseCIN("502068-4865"),"165020684865");
+        assert.strictEqual(normaliseCIN("502068-4865"), "165020684865");
         assert.strictEqual(normaliseCIN("5567548283"), "165567548283");
-        assert.strictEqual(normaliseCIN("16802521-6220"),"168025216220");
+        assert.strictEqual(normaliseCIN("16802521-6220"), "168025216220");
         assert.strictEqual(normaliseCIN("168024677182"), "168024677182");
         assert.strictEqual(normaliseCIN("870613-5657"), "198706135657");
+        assert.strictEqual(normaliseCIN("556042-7220", { shortNormalisation: true }), "556042-7220");
+        assert.strictEqual(normaliseCIN("165590675467", { shortNormalisation: true }), "559067-5467");
+        assert.strictEqual(normaliseCIN("941219-6942", { shortNormalisation: true }), "941219-6942");
+        assert.strictEqual(normaliseCIN("195910318384", { shortNormalisation: true }), "591031-8384");
     });
 });
