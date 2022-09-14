@@ -21,24 +21,15 @@
         "url": "git+https://github.com/kelszo/personnummer.js.git"
     },
     "keywords": [
-        "typescript",
-        "ts",
         "personnummer",
-        "validate",
-        "validering",
         "validation",
         "swedish",
         "parsing",
-        "parse",
         "personal",
         "number",
         "identity",
-        "social",
-        "security",
-        "national",
-        "organisations",
-        "organisationsnummer",
-        "luhn"
+        "social security number",
+        "organisationsnummer"
     ],
     "author": {
         "name": "Kelvin Szolnoky",
